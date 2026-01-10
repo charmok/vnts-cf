@@ -362,7 +362,7 @@ export class RelayRoom {
       this.startTime = Date.now();
 
       // 设置 logger 的 storage 引用
-      setPendingStorage(this.state.storage);
+      await setPendingStorage(this.state.storage);
 
       // 从存储恢复 AppCache
       await this.restoreAppCache();
@@ -3121,7 +3121,7 @@ export class RelayRoom {
   }
 
   handleClose(clientId) {
-    logger.info(`开始清理连接: ${clientId}`);
+    logger.debug(`开始清理连接: ${clientId}`);
 
     const context = this.contexts.get(clientId);
 

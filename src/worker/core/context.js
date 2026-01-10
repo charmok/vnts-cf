@@ -254,7 +254,20 @@ export class LinkVntContext {
     this.network_info = options.networkInfo || null;
     this.group = options.group || "";
     this.virtual_ip = options.virtualIp || 0;
-    this.broadcast = options.broadcast || new Ipv4Addr([255, 255, 255, 255]);
+    // 计算网络广播地址
+    if (options.networkInfo) {
+      const network = options.networkInfo.network;
+      const netmask = options.networkInfo.netmask;
+      const broadcast = network | (~netmask & 0xffffffff);
+      this.broadcast = new Ipv4Addr([
+        (broadcast >>> 24) & 0xff,
+        (broadcast >>> 16) & 0xff,
+        (broadcast >>> 8) & 0xff,
+        broadcast & 0xff,
+      ]);
+    } else {
+      this.broadcast = options.broadcast || new Ipv4Addr([255, 255, 255, 255]);
+    }
     this.timestamp = options.timestamp || Date.now();
   }
 }
